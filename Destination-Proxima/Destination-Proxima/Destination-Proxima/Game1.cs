@@ -17,9 +17,18 @@ namespace Destination_Proxima
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        //Textures
+        Texture2D Player1Texture;
+
+        //Positons
+        Rectangle player1Pos = new Rectangle(445, 500, 39, 49);
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+            graphics.PreferredBackBufferWidth = 900;
+            graphics.PreferredBackBufferHeight = 600;
+            Window.Title = "Destination Proxima";
             Content.RootDirectory = "Content";
         }
 
@@ -36,6 +45,7 @@ namespace Destination_Proxima
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            Player1Texture = Content.Load<Texture2D>("player1");
             // TODO: use this.Content to load your game content here
         }
 
@@ -49,7 +59,7 @@ namespace Destination_Proxima
         protected override void Update(GameTime gameTime)
         {
             // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 this.Exit();
 
             // TODO: Add your update logic here
@@ -61,8 +71,10 @@ namespace Destination_Proxima
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
+            spriteBatch.Begin();
+            //spriteBatch.Draw(Player1Texture, player1Pos, Color.White);
 
+            spriteBatch.End();
             base.Draw(gameTime);
         }
     }
