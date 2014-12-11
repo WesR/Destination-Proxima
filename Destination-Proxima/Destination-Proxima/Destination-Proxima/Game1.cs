@@ -19,9 +19,12 @@ namespace Destination_Proxima
 
         //Textures
         Texture2D Player1Texture;
+        Texture2D StarTexture;
 
         //Positons
         Rectangle player1Pos = new Rectangle(445, 500, 39, 49);
+
+
 
         public Game1()
         {
@@ -46,6 +49,7 @@ namespace Destination_Proxima
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             Player1Texture = Content.Load<Texture2D>("player1");
+            StarTexture = Content.Load<Texture2D>("Star");
             // TODO: use this.Content to load your game content here
         }
 
@@ -73,9 +77,19 @@ namespace Destination_Proxima
 
             spriteBatch.Begin();
             //spriteBatch.Draw(Player1Texture, player1Pos, Color.White);
-
+            DrawContentStartscreen();
             spriteBatch.End();
             base.Draw(gameTime);
+        }
+
+        private void DrawContentStartscreen()
+        {
+            Random r = new Random();
+            int i = 0; 
+            while (i < 20)
+            {
+                spriteBatch.Draw(StarTexture, new Vector2(r.Next(5, 10), r.Next(5, 10)), Color.White);
+            }
         }
     }
 }

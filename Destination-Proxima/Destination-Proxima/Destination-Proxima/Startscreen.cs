@@ -2,14 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Destination_Proxima;
 
-namespace Destination_Proxima
-{
-    class Startscreen
+   public  class Startscreen
     {
-        private void drawcontent()
-        {
-         
-        }
-    }
+
 }
