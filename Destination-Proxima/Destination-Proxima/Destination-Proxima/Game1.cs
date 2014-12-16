@@ -133,6 +133,7 @@ namespace Destination_Proxima
                      }
 
                      if (player1TravelH < 3 || player1TravelH > -3) { player1Pos.X = player1Pos.X + player1TravelH; }
+                     if (player1TravelH > 4) { player1TravelH = 4; }
                      if (player1TravelH > 2 && player1TravelH < 3) { player1TravelH--; }
                      if (player1TravelH < -2 && player1TravelH > -3) { player1TravelH++; }
                     
