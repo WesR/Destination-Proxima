@@ -36,7 +36,7 @@ namespace Destination_Proxima
         KeyboardState currentState;
 
         //Varibles
-        int playerSpeed = 4;
+        int playerSpeed = 1;
 
         //Missiles
         List<Vector2> misslePositions;
@@ -54,6 +54,7 @@ namespace Destination_Proxima
         Texture2D startSplashScreen;
 
         //Positons
+        int player1TravelV, player1TravelH;
         Rectangle player1Pos = new Rectangle(445, 500, 39, 49);
         Rectangle startButtonPos = new Rectangle(340, 310, 270,60);
 
@@ -121,15 +122,20 @@ namespace Destination_Proxima
                 case GameState.Play:
                      currentState = Keyboard.GetState();
                      playerTilt = PlayerTilt.None;
-                     if (currentState.IsKeyDown(Keys.A) && player1Pos.X > 3) { player1Pos.X = player1Pos.X - playerSpeed; playerTilt = PlayerTilt.Left; }
-                     if (currentState.IsKeyDown(Keys.D) && player1Pos.X < 860) { player1Pos.X = player1Pos.X + playerSpeed; playerTilt = PlayerTilt.Right; }
-                     if (currentState.IsKeyDown(Keys.W) && player1Pos.Y > 0) { player1Pos.Y = player1Pos.Y - playerSpeed;}
-                     if (currentState.IsKeyDown(Keys.S) && player1Pos.Y < 550) { player1Pos.Y = player1Pos.Y + playerSpeed;}
+                     if (currentState.IsKeyDown(Keys.A) && player1Pos.X > 3) { player1TravelH = player1TravelH  - playerSpeed; playerTilt = PlayerTilt.Left; }
+                     if (currentState.IsKeyDown(Keys.D) && player1Pos.X < 860) { player1TravelH = player1TravelH + playerSpeed; playerTilt = PlayerTilt.Right; }
+                     if (currentState.IsKeyDown(Keys.W) && player1Pos.Y > 0) { player1TravelV = player1TravelV - playerSpeed; }
+                     if (currentState.IsKeyDown(Keys.S) && player1Pos.Y < 550) { player1TravelV = player1TravelV + playerSpeed; }
                      if (currentState.IsKeyDown(Keys.Space))
                      {
                          misslePositions.Add(new Vector2(player1Pos.X + (Player1Texture.Width / 2), player1Pos.Y));
                          missleRects.Add(new Rectangle((int)(player1Pos.X + (Player1Texture.Width / 2)), (int)player1Pos.Y, player1Shot.Width, player1Shot.Height));
                      }
+
+                     if (player1TravelH < 3 || player1TravelH > -3) { player1Pos.X = player1Pos.X + player1TravelH; }
+                     if (player1TravelH > 3 && player1TravelH < 3) { player1TravelH--; }
+                     if (player1TravelH < -3 && player1TravelH > -3) { player1TravelH++; }
+                    
 
                      for (int i = 0; i < misslePositions.Count(); i++)
                      {
@@ -188,8 +194,10 @@ namespace Destination_Proxima
 
 
                     //Player1 shots
-                    for (int  i = 0; i < misslePositions.Count(); i++)
+                    for (int i = 0; i < misslePositions.Count(); i++)
+                    {
                         spriteBatch.Draw(player1Shot, misslePositions[i], Color.White);
+                    }
             }
             
         }
