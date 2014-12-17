@@ -175,10 +175,10 @@ namespace Destination_Proxima
                     if (player1TravelV < -maxPlayerSpeed){ player1TravelV = -maxPlayerSpeed;}//Speed cap
 
                     //Move missiles
-                     for (int i = 0; i < misslePositions.Count(); i++)
-                     {
-                         misslePositions[i] -= new Vector2(0, 2);
-                         missleRects[i] = new Rectangle((int)misslePositions[i].X, (int)misslePositions[i].Y, player1Shot.Width, player1Shot.Height);
+                     //for (int i = 0; i < misslePositions.Count(); i++)
+                    // {
+                      //   misslePositions[i] -= new Vector2(0, 2);
+                         //missleRects[i] = new Rectangle((int)misslePositions[i].X, (int)misslePositions[i].Y, player1Shot.Width, player1Shot.Height);
 
                         // if (8==7)
                        //  {
@@ -186,7 +186,7 @@ namespace Destination_Proxima
                         //     missleRects.RemoveAt(i);
                       //       i--;
                      //    }
-                     }
+                 //    }
                     break;
                 case GameState.End:
                     this.Exit();
@@ -230,15 +230,10 @@ namespace Destination_Proxima
                 case PlayerTilt.None:
                     spriteBatch.Draw(Player1Texture, player1Pos, Color.White);
                     break;
-
-
-                    //Player1 shots
-                    for (int i = 0; i < misslePositions.Count(); i++)
-                    {
-                        spriteBatch.Draw(player1Shot, misslePositions[i], Color.White);
-                    }
             }
-            
+            //Player1 shots
+            for (int i = 0; i < misslePositions.Count(); i++)
+                spriteBatch.Draw(player1Shot, misslePositions[i], Color.White);
         }
         private void DrawContentStartscreen()
         {
