@@ -127,12 +127,16 @@ namespace Destination_Proxima
                      currentState = Keyboard.GetState();
                      playerTilt = PlayerTilt.None; //Rests tilt
                     //X axis movment
-                     if (currentState.IsKeyDown(Keys.A) && player1Pos.X > 3) { player1TravelH = player1TravelH  - playerSpeed; playerTilt = PlayerTilt.Left; }
-                     if (currentState.IsKeyDown(Keys.D) && player1Pos.X < 860) { player1TravelH = player1TravelH + playerSpeed; playerTilt = PlayerTilt.Right; }
-                     if (player1DriftCurrentX >= player1DriftRate) //Drift
+                     if (currentState.IsKeyDown(Keys.A)) { player1TravelH = player1TravelH  - playerSpeed; playerTilt = PlayerTilt.Left; }
+                     if (currentState.IsKeyDown(Keys.D)) { player1TravelH = player1TravelH + playerSpeed; playerTilt = PlayerTilt.Right; }
+                    //Wrap around X
+                     if (player1Pos.X < -10) { player1Pos.X = 890; }
+                     else if (player1Pos.X > 890) { player1Pos.X = -10; }
+                    //Drift
+                     if (player1DriftCurrentX >= player1DriftRate) 
                      {
-                         if (currentState.IsKeyUp(Keys.A) && player1Pos.X < 860 && player1TravelH < 0) { player1TravelH = player1TravelH + 1; }
-                         if (currentState.IsKeyUp(Keys.D) && player1Pos.X > 3 && player1TravelH > 0) { player1TravelH = player1TravelH - 1; }
+                         if (currentState.IsKeyUp(Keys.A) && player1TravelH < 0) { player1TravelH = player1TravelH + 1; }
+                         if (currentState.IsKeyUp(Keys.D)  && player1TravelH > 0) { player1TravelH = player1TravelH - 1; }
                          player1DriftCurrentX = 0; //Reseting counter
                      }
                      else
@@ -140,12 +144,15 @@ namespace Destination_Proxima
                          player1DriftCurrentX++; //Adding to counter
                      }
                     //Y axis movment
-                     if (currentState.IsKeyDown(Keys.W) && player1Pos.Y > 0) { player1TravelV = player1TravelV - playerSpeed; }
-                     if (currentState.IsKeyDown(Keys.S) && player1Pos.Y < 550) { player1TravelV = player1TravelV + playerSpeed; }
+                     if (currentState.IsKeyDown(Keys.W)) { player1TravelV = player1TravelV - playerSpeed; }
+                     if (currentState.IsKeyDown(Keys.S)) { player1TravelV = player1TravelV + playerSpeed; }
+                    //Wrap around Y
+                     if (player1Pos.Y < -40) { player1Pos.Y = 590; }
+                     else if (player1Pos.Y > 600) { player1Pos.Y = -10; }
                      if (player1DriftCurrentY >= player1DriftRate) //Drift
                      {
-                         if (currentState.IsKeyUp(Keys.W) && player1Pos.Y < 550 && player1TravelV < 0) { player1TravelV = player1TravelV + 1; }
-                         if (currentState.IsKeyUp(Keys.S) && player1Pos.Y > 0 && player1TravelV > 0) { player1TravelV = player1TravelV - 1; }
+                         if (currentState.IsKeyUp(Keys.W)  && player1TravelV < 0) { player1TravelV = player1TravelV + 1; }
+                         if (currentState.IsKeyUp(Keys.S)  && player1TravelV > 0) { player1TravelV = player1TravelV - 1; }
                          player1DriftCurrentY = 0; //Reseting counter
                      }
                      else
@@ -155,8 +162,8 @@ namespace Destination_Proxima
                     //Shooting
                      if (currentState.IsKeyDown(Keys.Space))
                      {
-                         misslePositions.Add(new Vector2(player1Pos.X + (Player1Texture.Width / 2), player1Pos.Y));
-                         missleRects.Add(new Rectangle((int)(player1Pos.X + (Player1Texture.Width / 2)), (int)player1Pos.Y, player1Shot.Width, player1Shot.Height));
+                         misslePositions.Add(new Vector2(player1TravelH + (Player1Texture.Width / 2), player1Pos.Y));
+                         missleRects.Add(new Rectangle((int)(player1TravelH + (Player1Texture.Width / 2)), (int)player1TravelV, player1Shot.Width, player1Shot.Height));
                      }
                     //Setting the speed
                     player1Pos.X = player1Pos.X + player1TravelH; //Updateing speed
@@ -167,6 +174,7 @@ namespace Destination_Proxima
                     if (player1TravelV > maxPlayerSpeed){ player1TravelV = maxPlayerSpeed;}//Speed cap
                     if (player1TravelV < -maxPlayerSpeed){ player1TravelV = -maxPlayerSpeed;}//Speed cap
 
+                    //Move missiles
                      for (int i = 0; i < misslePositions.Count(); i++)
                      {
                          misslePositions[i] -= new Vector2(0, 2);
@@ -181,6 +189,7 @@ namespace Destination_Proxima
                      }
                     break;
                 case GameState.End:
+                    this.Exit();
                     break;
             }
 
