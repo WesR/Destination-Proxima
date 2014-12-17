@@ -36,7 +36,11 @@ namespace Destination_Proxima
         KeyboardState currentState;
 
         //Varibles
-        int playerSpeed = 1;
+        int playerSpeed = 2;
+        int player1DriftRate = 10;
+        int player1DriftCurrentX;
+        int player1DriftCurrentY;
+        int maxPlayerSpeed = 6;
 
         //Missiles
         List<Vector2> misslePositions;
@@ -121,22 +125,47 @@ namespace Destination_Proxima
                     break;
                 case GameState.Play:
                      currentState = Keyboard.GetState();
-                     playerTilt = PlayerTilt.None;
+                     playerTilt = PlayerTilt.None; //Rests tilt
+                    //X axis movment
                      if (currentState.IsKeyDown(Keys.A) && player1Pos.X > 3) { player1TravelH = player1TravelH  - playerSpeed; playerTilt = PlayerTilt.Left; }
                      if (currentState.IsKeyDown(Keys.D) && player1Pos.X < 860) { player1TravelH = player1TravelH + playerSpeed; playerTilt = PlayerTilt.Right; }
+                     if (player1DriftCurrentX >= player1DriftRate) //Drift
+                     {
+                         if (currentState.IsKeyUp(Keys.A) && player1Pos.X < 860 && player1TravelH < 0) { player1TravelH = player1TravelH + 1; }
+                         if (currentState.IsKeyUp(Keys.D) && player1Pos.X > 3 && player1TravelH > 0) { player1TravelH = player1TravelH - 1; }
+                         player1DriftCurrentX = 0; //Reseting counter
+                     }
+                     else
+                     {
+                         player1DriftCurrentX++; //Adding to counter
+                     }
+                    //Y axis movment
                      if (currentState.IsKeyDown(Keys.W) && player1Pos.Y > 0) { player1TravelV = player1TravelV - playerSpeed; }
                      if (currentState.IsKeyDown(Keys.S) && player1Pos.Y < 550) { player1TravelV = player1TravelV + playerSpeed; }
+                     if (player1DriftCurrentY >= player1DriftRate) //Drift
+                     {
+                         if (currentState.IsKeyUp(Keys.W) && player1Pos.Y < 550 && player1TravelV < 0) { player1TravelV = player1TravelV + 1; }
+                         if (currentState.IsKeyUp(Keys.S) && player1Pos.Y > 0 && player1TravelV > 0) { player1TravelV = player1TravelV - 1; }
+                         player1DriftCurrentY = 0; //Reseting counter
+                     }
+                     else
+                     {
+                         player1DriftCurrentY++; //Adding to counter
+                     }
+                    //Shooting
                      if (currentState.IsKeyDown(Keys.Space))
                      {
                          misslePositions.Add(new Vector2(player1Pos.X + (Player1Texture.Width / 2), player1Pos.Y));
                          missleRects.Add(new Rectangle((int)(player1Pos.X + (Player1Texture.Width / 2)), (int)player1Pos.Y, player1Shot.Width, player1Shot.Height));
                      }
-
-                     if (player1TravelH < 3 || player1TravelH > -3) { player1Pos.X = player1Pos.X + player1TravelH; }
-                     if (player1TravelH > 4) { player1TravelH = 4; }
-                     if (player1TravelH > 2 && player1TravelH < 3) { player1TravelH--; }
-                     if (player1TravelH < -2 && player1TravelH > -3) { player1TravelH++; }
+                    //Setting the speed
+                    player1Pos.X = player1Pos.X + player1TravelH; //Updateing speed
+                    if (player1TravelH > maxPlayerSpeed){ player1TravelH = maxPlayerSpeed;} //Speed cap
+                    if (player1TravelH < -maxPlayerSpeed){ player1TravelH = -maxPlayerSpeed;}//Speed cap
                     
+                    player1Pos.Y = player1Pos.Y + player1TravelV; //Updating speed
+                    if (player1TravelV > maxPlayerSpeed){ player1TravelV = maxPlayerSpeed;}//Speed cap
+                    if (player1TravelV < -maxPlayerSpeed){ player1TravelV = -maxPlayerSpeed;}//Speed cap
 
                      for (int i = 0; i < misslePositions.Count(); i++)
                      {
