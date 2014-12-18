@@ -41,6 +41,8 @@ namespace Destination_Proxima
         int player1DriftCurrentX;
         int player1DriftCurrentY;
         int maxPlayerSpeed = 6;
+        int maxPlayerShotSpeed = 20;
+        int PlayerShotSpeedCurrent;
 
         //Missiles
         List<Vector2> misslePositions;
@@ -147,8 +149,11 @@ namespace Destination_Proxima
                      if (currentState.IsKeyDown(Keys.W)) { player1TravelV = player1TravelV - playerSpeed; }
                      if (currentState.IsKeyDown(Keys.S)) { player1TravelV = player1TravelV + playerSpeed; }
                     //Wrap around Y
-                     if (player1Pos.Y < -40) { player1Pos.Y = 590; }
-                     else if (player1Pos.Y > 600) { player1Pos.Y = -10; }
+                    //if (player1Pos.Y < -40) { player1Pos.Y = 590; }
+                    // else if (player1Pos.Y > 600) { player1Pos.Y = -10; }
+                    //Limiting Y movement
+                    if (player1Pos.Y < 5) { player1Pos.Y = 5; }
+                     else if (player1Pos.Y > 540) { player1Pos.Y = 540; }
                      if (player1DriftCurrentY >= player1DriftRate) //Drift
                      {
                          if (currentState.IsKeyUp(Keys.W)  && player1TravelV < 0) { player1TravelV = player1TravelV + 1; }
@@ -160,10 +165,20 @@ namespace Destination_Proxima
                          player1DriftCurrentY++; //Adding to counter
                      }
                     //Shooting
-                     if (currentState.IsKeyDown(Keys.Space))
+                     if (PlayerShotSpeedCurrent >= maxPlayerShotSpeed)
                      {
-                         misslePositions.Add(new Vector2(player1TravelH + (Player1Texture.Width / 2), player1Pos.Y));
-                         missleRects.Add(new Rectangle((int)(player1TravelH + (Player1Texture.Width / 2)), (int)player1TravelV, player1Shot.Width, player1Shot.Height));
+                         if (currentState.IsKeyDown(Keys.Space))
+                         {
+                             misslePositions.Add(new Vector2(player1Pos.X + (Player1Texture.Width / 3), player1Pos.Y));
+                             misslePositions.Add(new Vector2(player1Pos.X, player1Pos.Y));
+                             missleRects.Add(new Rectangle((int)(player1Pos.X + (Player1Texture.Width / 3)), (int)player1Pos.Y, player1Shot.Width, player1Shot.Height));
+                             missleRects.Add(new Rectangle((int)(player1Pos.X), (int)player1Pos.Y, player1Shot.Width, player1Shot.Height));
+                         }
+                         PlayerShotSpeedCurrent = 0;
+                     }
+                     else
+                     {
+                         PlayerShotSpeedCurrent++;
                      }
                     //Setting the speed
                     player1Pos.X = player1Pos.X + player1TravelH; //Updateing speed
@@ -175,18 +190,18 @@ namespace Destination_Proxima
                     if (player1TravelV < -maxPlayerSpeed){ player1TravelV = -maxPlayerSpeed;}//Speed cap
 
                     //Move missiles
-                     //for (int i = 0; i < misslePositions.Count(); i++)
-                    // {
-                      //   misslePositions[i] -= new Vector2(0, 2);
-                         //missleRects[i] = new Rectangle((int)misslePositions[i].X, (int)misslePositions[i].Y, player1Shot.Width, player1Shot.Height);
+                     for (int i = 0; i < misslePositions.Count(); i++)
+                     {
+                         misslePositions[i] -= new Vector2(0, 8);
+                         missleRects[i] = new Rectangle((int)misslePositions[i].X, (int)misslePositions[i].Y, player1Shot.Width, player1Shot.Height);
 
-                        // if (8==7)
-                       //  {
-                         //    misslePositions.RemoveAt(i);
-                        //     missleRects.RemoveAt(i);
-                      //       i--;
-                     //    }
-                 //    }
+                         if (misslePositions[i].Y < 0)
+                         {
+                             misslePositions.RemoveAt(i);
+                             missleRects.RemoveAt(i);
+                             i--;
+                         }
+                    }
                     break;
                 case GameState.End:
                     this.Exit();
