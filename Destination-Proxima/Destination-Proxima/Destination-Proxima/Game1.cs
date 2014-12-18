@@ -40,7 +40,7 @@ namespace Destination_Proxima
         int player1DriftRate = 10;
         int player1DriftCurrentX;
         int player1DriftCurrentY;
-        int maxPlayerSpeed = 6;
+        int maxPlayerSpeed = 5;
         int maxPlayerShotSpeed = 20;
         int PlayerShotSpeedCurrent;
 
@@ -195,7 +195,7 @@ namespace Destination_Proxima
                          misslePositions[i] -= new Vector2(0, 8);
                          missleRects[i] = new Rectangle((int)misslePositions[i].X, (int)misslePositions[i].Y, player1Shot.Width, player1Shot.Height);
 
-                         if (misslePositions[i].Y < 0)
+                         if (misslePositions[i].Y < 1)
                          {
                              misslePositions.RemoveAt(i);
                              missleRects.RemoveAt(i);
