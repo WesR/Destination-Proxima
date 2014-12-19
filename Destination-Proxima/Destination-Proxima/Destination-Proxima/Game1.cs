@@ -34,6 +34,7 @@ namespace Destination_Proxima
         PlayerTilt playerTilt;
         GameState gameState;
         KeyboardState currentState;
+        KeyboardState oldState;
 
         //Varibles
         int playerSpeed = 2;
@@ -165,7 +166,7 @@ namespace Destination_Proxima
                          player1DriftCurrentY++; //Adding to counter
                      }
                     //Shooting
-                     if (PlayerShotSpeedCurrent >= maxPlayerShotSpeed)
+                     if (PlayerShotSpeedCurrent >= maxPlayerShotSpeed || oldState.IsKeyUp(Keys.Space))
                      {
                          if (currentState.IsKeyDown(Keys.Space))
                          {
@@ -207,7 +208,7 @@ namespace Destination_Proxima
                     this.Exit();
                     break;
             }
-
+            oldState = currentState;
             base.Update(gameTime);
         }
 
