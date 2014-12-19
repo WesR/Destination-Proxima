@@ -127,7 +127,7 @@ namespace Destination_Proxima
         {
             // Allows the game to exit
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
-                this.Exit();
+                gameState = GameState.PauseGame;
 
             switch (gameState)
             {
@@ -139,6 +139,12 @@ namespace Destination_Proxima
                             gameState = GameState.Play;
                     }
                     break;
+
+                case GameState.PauseGame:
+                    if (Keyboard.GetState().IsKeyDown(Keys.Space))
+                        gameState = GameState.Play;
+                    break;
+
                 case GameState.Play:
                      currentState = Keyboard.GetState();
                      playerTilt = PlayerTilt.None; //Rests tilt
