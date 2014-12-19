@@ -45,6 +45,10 @@ namespace Destination_Proxima
         int maxPlayerShotSpeed = 20;
         int PlayerShotSpeedCurrent;
 
+        //Enemy
+        List<Vector2> enemyPositions;
+        List<Rectangle> enemyRects;
+
         //Missiles
         List<Vector2> misslePositions;
         List<Rectangle> missleRects;
