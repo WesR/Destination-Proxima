@@ -241,6 +241,9 @@ namespace Destination_Proxima
                 case GameState.MainMenu:
                     DrawContentStartscreen();
                     break;
+                case GameState.PauseGame:
+                    GamePaused();
+                    break;
                 case GameState.Play:
                     DrawGamePlay();
                     break;
@@ -249,6 +252,26 @@ namespace Destination_Proxima
             }
             spriteBatch.End();
             base.Draw(gameTime);
+        }
+
+        private void GamePaused()
+        {
+            switch (playerTilt)
+            {
+              //Player 1
+                case PlayerTilt.Left:
+                    spriteBatch.Draw(player1TextureBL, player1Pos, Color.White);
+                    break;
+                case PlayerTilt.Right:
+                    spriteBatch.Draw(player1TextureBR, player1Pos, Color.White);
+                    break;
+                case PlayerTilt.None:
+                    spriteBatch.Draw(Player1Texture, player1Pos, Color.White);
+                    break;
+            }
+            //Player1 shots
+            for (int i = 0; i < misslePositions.Count(); i++)
+                spriteBatch.Draw(player1Shot, misslePositions[i], Color.White);
         }
 
         private void DrawGamePlay()
