@@ -20,6 +20,8 @@ namespace Destination_Proxima
         enum GameState
         {
             MainMenu,
+            LevelDisplay,
+            PauseGame,
             Play,
             End,
         }
@@ -37,6 +39,7 @@ namespace Destination_Proxima
         KeyboardState oldState;
 
         //Varibles
+        int currentLevel = 1;
         int playerSpeed = 2;
         int player1DriftRate = 10;
         int player1DriftCurrentX;
@@ -61,6 +64,7 @@ namespace Destination_Proxima
         Texture2D player1TextureBR;
         Texture2D player1TextureBL;
         Texture2D player1Shot;
+        Texture2D enemy1Texture;
         Texture2D StarTexture;
         Texture2D startSplashScreen;
 
@@ -94,14 +98,19 @@ namespace Destination_Proxima
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            //Missile Spots
             misslePositions = new List<Vector2>();
             missleRects = new List<Rectangle>();
+            //Enemy Spots
+            enemyPositions = new List<Vector2>();
+            enemyRects = new List<Rectangle>();
 
             startButtonFont = Content.Load<SpriteFont>("StartButton");
             player1TextureBR = Content.Load<Texture2D>("player1BR");
             player1TextureBL = Content.Load<Texture2D>("player1BL");
             Player1Texture = Content.Load<Texture2D>("player1");
             player1Shot = Content.Load<Texture2D>("player1Shot");
+            enemy1Texture = Content.Load<Texture2D>("enemy1");
             startSplashScreen = Content.Load<Texture2D>("Destination_Proxima");
             StarTexture = Content.Load<Texture2D>("Star");
             // TODO: use this.Content to load your game content here
