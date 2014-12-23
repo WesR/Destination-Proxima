@@ -58,7 +58,7 @@ namespace Destination_Proxima
         List<Rectangle> missleRects;
 
         //Fonts
-        SpriteFont startButtonFont;
+        SpriteFont mainGameFont;
 
         //Textures
         Texture2D Player1Texture;
@@ -106,7 +106,7 @@ namespace Destination_Proxima
             enemyPositions = new List<Vector2>();
             enemyRects = new List<Rectangle>();
 
-            startButtonFont = Content.Load<SpriteFont>("StartButton");
+            mainGameFont = Content.Load<SpriteFont>("StartButton");
             player1TextureBR = Content.Load<Texture2D>("player1BR");
             player1TextureBL = Content.Load<Texture2D>("player1BL");
             Player1Texture = Content.Load<Texture2D>("player1");
@@ -273,6 +273,11 @@ namespace Destination_Proxima
             //Player1 shots
             for (int i = 0; i < misslePositions.Count(); i++)
                 spriteBatch.Draw(player1Shot, misslePositions[i], Color.White);
+        
+        //Menu bars and title
+            spriteBatch.DrawString(mainGameFont, "Game Paused", new Vector2((graphics.PreferredBackBufferWidth / 3), 12), Color.White);
+            spriteBatch.DrawString(mainGameFont, "Quit", new Vector2((graphics.PreferredBackBufferWidth / 5), (graphics.PreferredBackBufferHeight / 3)), Color.White);
+            spriteBatch.DrawString(mainGameFont, "Resume", new Vector2((graphics.PreferredBackBufferWidth / 5 * 3), (graphics.PreferredBackBufferHeight / 3)), Color.White);
         }
 
         private void DrawGamePlay()
@@ -304,7 +309,7 @@ namespace Destination_Proxima
                 spriteBatch.Draw(StarTexture, new Vector2(r.Next(0, graphics.PreferredBackBufferWidth), r.Next(0, graphics.PreferredBackBufferHeight)), Color.White);
             }
             spriteBatch.Draw(startSplashScreen, new Rectangle(graphics.PreferredBackBufferWidth / 9, graphics.PreferredBackBufferHeight / 6,700,200), Color.White);
-            spriteBatch.DrawString(startButtonFont, "Start Game", new Vector2(startButtonPos.X, startButtonPos.Y), Color.White);
+            spriteBatch.DrawString(mainGameFont, "Start Game", new Vector2(startButtonPos.X, startButtonPos.Y), Color.White);
         }
     }
 }
