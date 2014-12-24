@@ -153,8 +153,8 @@ namespace Destination_Proxima
                      if (currentState.IsKeyDown(Keys.A)) { player1TravelH = player1TravelH  - playerSpeed; playerTilt = PlayerTilt.Left; }
                      if (currentState.IsKeyDown(Keys.D)) { player1TravelH = player1TravelH + playerSpeed; playerTilt = PlayerTilt.Right; }
                     //Wrap around X
-                     if (player1Pos.X < -10) { player1Pos.X = 890; }
-                     else if (player1Pos.X > 890) { player1Pos.X = -10; }
+                     if (player1Pos.X < -10) { player1Pos.X = (graphics.PreferredBackBufferWidth - 10); }
+                     else if (player1Pos.X > (graphics.PreferredBackBufferWidth - 10)) { player1Pos.X = -10; }
                     //Drift
                      if (player1DriftCurrentX >= player1DriftRate) 
                      {
@@ -174,7 +174,7 @@ namespace Destination_Proxima
                     // else if (player1Pos.Y > 600) { player1Pos.Y = -10; }
                     //Limiting Y movement
                     if (player1Pos.Y < 5) { player1Pos.Y = 5; }
-                     else if (player1Pos.Y > 540) { player1Pos.Y = 540; }
+                     else if (player1Pos.Y > 540) { player1Pos.Y = (graphics.PreferredBackBufferHeight - 60); }
                      if (player1DriftCurrentY >= player1DriftRate) //Drift
                      {
                          if (currentState.IsKeyUp(Keys.W)  && player1TravelV < 0) { player1TravelV = player1TravelV + 1; }
