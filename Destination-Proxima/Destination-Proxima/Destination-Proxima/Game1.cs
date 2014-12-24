@@ -69,6 +69,7 @@ namespace Destination_Proxima
         Texture2D StarTexture;
         Texture2D startSplashScreen;
 
+
         //Positons
         int player1TravelV, player1TravelH;
         Rectangle player1Pos = new Rectangle(445, 500, 39, 49);
