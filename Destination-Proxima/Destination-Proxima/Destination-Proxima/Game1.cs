@@ -375,28 +375,37 @@ namespace Destination_Proxima
         }
         private void DrawContentStartscreen()
         {
+            generateStartStars();
+            moveStartStars();
+            for (int i = 0; i < starPositions.Count(); i++)
+                spriteBatch.Draw(starTexture, starPositions[i], Color.White);
+            spriteBatch.Draw(startSplashScreen, new Rectangle(graphics.PreferredBackBufferWidth / 9, graphics.PreferredBackBufferHeight / 6,700,200), Color.White);
+            spriteBatch.DrawString(mainGameFont, startString, new Vector2(startButtonPos.X, startButtonPos.Y), Color.White);
+        }
+        public void generateStartStars()
+        {
             Random r = new Random();
-            for (int i = 0; i < 10; i++ )
+            for (int i = 0; i < 1; i++)
             {
-                int randomHight = r.Next(0, graphics.PreferredBackBufferHeight - starTexture.Height);
+                int randomHight = r.Next(1, graphics.PreferredBackBufferHeight - starTexture.Height);
                 starPositions.Add(new Vector2(0, randomHight));
                 starRects.Add(new Rectangle((int)(0), (int)randomHight, starTexture.Width, starTexture.Height));
             }
+        }
+        public void moveStartStars()
+        {
+            for (int i = 0; i < starPositions.Count(); i++)
+            {
+                starPositions[i] += new Vector2(4, 0);
+                starRects[i] = new Rectangle((int)starPositions[i].X, (int)starPositions[i].Y, starTexture.Width, starTexture.Height);
 
-                for (int i = 0; i < starPositions.Count(); i++)
+                if (starPositions[i].Y < 1)
                 {
-                    starPositions[i] += new Vector2(4, 0);
-                    starRects[i] = new Rectangle((int)starPositions[i].X, (int)starPositions[i].Y, starTexture.Width, starTexture.Height);
-
-                    if (starPositions[i].Y < 1)
-                    {
-                        starPositions.RemoveAt(i);
-                        starRects.RemoveAt(i);
-                        i--;
-                    }
+                    starPositions.RemoveAt(i);
+                    starRects.RemoveAt(i);
+                    i--;
                 }
-            spriteBatch.Draw(startSplashScreen, new Rectangle(graphics.PreferredBackBufferWidth / 9, graphics.PreferredBackBufferHeight / 6,700,200), Color.White);
-            spriteBatch.DrawString(mainGameFont, startString, new Vector2(startButtonPos.X, startButtonPos.Y), Color.White);
+            }
         }
     }
 }
