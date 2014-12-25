@@ -40,6 +40,8 @@ namespace Destination_Proxima
         KeyboardState oldState;
 
         //Varibles
+        int player1Health = 99;
+        float healthBarRotation = 0.0f;
         int currentLevel = 1;
         int playerSpeed = 2;
         int player1DriftRate = 10;
@@ -49,6 +51,7 @@ namespace Destination_Proxima
         int maxPlayerShotSpeed = 20;
         int PlayerShotSpeedCurrent;
 
+
         //Enemy
         List<Vector2> enemyPositions;
         List<Rectangle> enemyRects;
@@ -57,23 +60,43 @@ namespace Destination_Proxima
         List<Vector2> misslePositions;
         List<Rectangle> missleRects;
 
+        //Start Screen Stars
+        List<Vector2> starPositions;
+        List<Rectangle> starRects;
+
         //Fonts
         SpriteFont mainGameFont;
+
+        //Button Hovering
+        Boolean startGameHover = false;
+
+        //Strings
+        string[] characterMap = {"a","A","b","B","c","C","d","D","e","E","f","F","g","G","h","H","i","I","j","J","k","K",
+                                       "l","L","m","M","n","N","o","O","p","P","q","Q","r","R","s","S","t","T","u","U","v",
+                                       "V","w","W","x","X","y","Y","z","Z",";",":","'","[","]","{","}",",","/",".","+","=",
+                                       "!","@","#","$","%","^","&","*","(",")","~","-","_","`"};
+        string startString = "Start Game";
+        string pausedString = "Game Paused";
+        string resumeString = "Resume";
+        string gameOverString = "Game Over";
+        string quitString = "Quit";
+        string levelString = "Level:";
 
         //Textures
         Texture2D Player1Texture;
         Texture2D player1TextureBR;
         Texture2D player1TextureBL;
         Texture2D player1Shot;
+        Texture2D player1HealthMeter;
         Texture2D enemy1Texture;
-        Texture2D StarTexture;
+        Texture2D starTexture;
         Texture2D startSplashScreen;
 
 
         //Positons
         int player1TravelV, player1TravelH;
-        Rectangle player1Pos = new Rectangle(445, 500, 39, 49);
-        Rectangle startButtonPos = new Rectangle(340, 310, 270,60);
+        Rectangle player1Pos;
+        Rectangle startButtonPos;
 
 
 
@@ -96,26 +119,36 @@ namespace Destination_Proxima
 
         protected override void LoadContent()
         {
+            //Positions
+            player1Pos = new Rectangle(graphics.PreferredBackBufferWidth / 2, 500, 39, 49);
+            startButtonPos = new Rectangle(graphics.PreferredBackBufferWidth / 3, 310, 270, 60);
+
             IsMouseVisible = true;
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            //Start Star Spots
+            starPositions = new List<Vector2>();
+            starRects = new List<Rectangle>();
             //Missile Spots
             misslePositions = new List<Vector2>();
             missleRects = new List<Rectangle>();
             //Enemy Spots
             enemyPositions = new List<Vector2>();
             enemyRects = new List<Rectangle>();
-
+            //Fonts
             mainGameFont = Content.Load<SpriteFont>("StartButton");
+            //Player 1
             player1TextureBR = Content.Load<Texture2D>("player1BR");
             player1TextureBL = Content.Load<Texture2D>("player1BL");
             Player1Texture = Content.Load<Texture2D>("player1");
             player1Shot = Content.Load<Texture2D>("player1Shot");
+            player1HealthMeter = Content.Load<Texture2D>("healthBar");
+            //Enemy
             enemy1Texture = Content.Load<Texture2D>("enemy1");
+            //Menues
             startSplashScreen = Content.Load<Texture2D>("Destination_Proxima");
-            StarTexture = Content.Load<Texture2D>("Star");
-            // TODO: use this.Content to load your game content here
+            starTexture = Content.Load<Texture2D>("Star");
         }
 
 
@@ -127,14 +160,24 @@ namespace Destination_Proxima
 
         protected override void Update(GameTime gameTime)
         {
-            // Allows the game to exit
-            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
+            //Exit Game
+            if (Keyboard.GetState().IsKeyDown(Keys.Escape) && gameState == GameState.MainMenu)
+                this.Exit();
+            // Pause game
+            if (Keyboard.GetState().IsKeyDown(Keys.Escape) && gameState == GameState.Play)
                 gameState = GameState.PauseGame;
+
+            if (Keyboard.GetState().IsKeyDown(Keys.P) && gameState == GameState.Play)
+                player1Health--;
 
             switch (gameState)
             {
                 case GameState.MainMenu:
                     Point mousePoint = new Point(Mouse.GetState().X, Mouse.GetState().Y);
+                    if (startButtonPos.Contains(mousePoint))
+                    {
+                        startGameHover = true;
+                    }                    
                     if (Mouse.GetState().LeftButton == ButtonState.Pressed)
                     {
                         if (startButtonPos.Contains(mousePoint))
@@ -229,10 +272,31 @@ namespace Destination_Proxima
                     this.Exit();
                     break;
             }
+            healthCheck();
             oldState = currentState;
             base.Update(gameTime);
         }
 
+        private void healthCheck()
+        {
+            if (player1Health > 90) { healthBarRotation = 0.0f; }
+            else if (player1Health < 89 && player1Health > 80) { healthBarRotation = -0.1f; }
+            else if (player1Health < 79 && player1Health > 75) { healthBarRotation = -0.2f; }
+            else if (player1Health < 74 && player1Health > 70) { healthBarRotation = -0.3f; }
+            else if (player1Health < 69 && player1Health > 65) { healthBarRotation = -0.4f; }
+            else if (player1Health < 64 && player1Health > 60) { healthBarRotation = -0.5f; }
+            else if (player1Health < 59 && player1Health > 55) { healthBarRotation = -0.6f; }
+            else if (player1Health < 54 && player1Health > 50) { healthBarRotation = -0.7f; }
+            else if (player1Health < 49 && player1Health > 45) { healthBarRotation = -0.8f; }
+            else if (player1Health < 44 && player1Health > 40) { healthBarRotation = -0.9f; }
+            else if (player1Health < 39 && player1Health > 35) { healthBarRotation = -1.0f; }
+            else if (player1Health < 34 && player1Health > 30) { healthBarRotation = -1.1f; }
+            else if (player1Health < 29 && player1Health > 25) { healthBarRotation = -1.2f; }
+            else if (player1Health < 24 && player1Health > 20) { healthBarRotation = -1.3f; }
+            else if (player1Health < 19 && player1Health > 10) { healthBarRotation = -1.4f; }
+            else if (player1Health < 9 && player1Health > 0) { healthBarRotation = -1.5f; }
+            else if (player1Health < 0) { healthBarRotation = -1.6f; }
+        }
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
@@ -256,6 +320,13 @@ namespace Destination_Proxima
             base.Draw(gameTime);
         }
 
+        private void playerHealth()
+        {
+
+            spriteBatch.Draw(player1HealthMeter, new Rectangle(0,graphics.PreferredBackBufferHeight,130,130), null, Color.White, healthBarRotation,new Vector2(0,player1HealthMeter.Height),SpriteEffects.None, 0f);
+            spriteBatch.DrawString(mainGameFont, player1Health.ToString(), new Vector2(9,graphics.PreferredBackBufferHeight - 60), Color.White);
+        }
+
         private void GamePaused()
         {
             switch (playerTilt)
@@ -276,9 +347,10 @@ namespace Destination_Proxima
                 spriteBatch.Draw(player1Shot, misslePositions[i], Color.White);
         
         //Menu bars and title
-            spriteBatch.DrawString(mainGameFont, "Game Paused", new Vector2((graphics.PreferredBackBufferWidth / 3), 12), Color.White);
-            spriteBatch.DrawString(mainGameFont, "Quit", new Vector2((graphics.PreferredBackBufferWidth / 5), (graphics.PreferredBackBufferHeight / 3)), Color.White);
-            spriteBatch.DrawString(mainGameFont, "Resume", new Vector2((graphics.PreferredBackBufferWidth / 5 * 3), (graphics.PreferredBackBufferHeight / 3)), Color.White);
+            spriteBatch.DrawString(mainGameFont, pausedString, new Vector2((graphics.PreferredBackBufferWidth / 3), 12), Color.White);
+            spriteBatch.DrawString(mainGameFont, quitString, new Vector2((graphics.PreferredBackBufferWidth / 5), (graphics.PreferredBackBufferHeight / 3)), Color.White);
+            spriteBatch.DrawString(mainGameFont, resumeString, new Vector2((graphics.PreferredBackBufferWidth / 5 * 3), (graphics.PreferredBackBufferHeight / 3)), Color.White);
+            playerHealth();
         }
 
         private void DrawGamePlay()
@@ -299,18 +371,32 @@ namespace Destination_Proxima
             //Player1 shots
             for (int i = 0; i < misslePositions.Count(); i++)
                 spriteBatch.Draw(player1Shot, misslePositions[i], Color.White);
+            playerHealth();
         }
         private void DrawContentStartscreen()
         {
             Random r = new Random();
-            int i = 0; 
-            while (i < 20)
+            for (int i = 0; i < 10; i++ )
             {
-                i++;
-                spriteBatch.Draw(StarTexture, new Vector2(r.Next(0, graphics.PreferredBackBufferWidth), r.Next(0, graphics.PreferredBackBufferHeight)), Color.White);
+                int randomHight = r.Next(0, graphics.PreferredBackBufferHeight - starTexture.Height);
+                starPositions.Add(new Vector2(0, randomHight));
+                starRects.Add(new Rectangle((int)(0), (int)randomHight, starTexture.Width, starTexture.Height));
             }
+
+                for (int i = 0; i < starPositions.Count(); i++)
+                {
+                    starPositions[i] += new Vector2(4, 0);
+                    starRects[i] = new Rectangle((int)starPositions[i].X, (int)starPositions[i].Y, starTexture.Width, starTexture.Height);
+
+                    if (starPositions[i].Y < 1)
+                    {
+                        starPositions.RemoveAt(i);
+                        starRects.RemoveAt(i);
+                        i--;
+                    }
+                }
             spriteBatch.Draw(startSplashScreen, new Rectangle(graphics.PreferredBackBufferWidth / 9, graphics.PreferredBackBufferHeight / 6,700,200), Color.White);
-            spriteBatch.DrawString(mainGameFont, "Start Game", new Vector2(startButtonPos.X, startButtonPos.Y), Color.White);
+            spriteBatch.DrawString(mainGameFont, startString, new Vector2(startButtonPos.X, startButtonPos.Y), Color.White);
         }
     }
 }
