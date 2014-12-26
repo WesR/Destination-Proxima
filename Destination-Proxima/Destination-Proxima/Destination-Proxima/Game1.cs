@@ -428,8 +428,11 @@ namespace Destination_Proxima
             string outPut = startString;
             for (int i = 0; i < letterSplatLength; i++)
             {
-                string lastCut = outPut;
-                outPut = characterMap[r.Next(0,77)];
+                outPut = outPut.Substring((i+1));
+                for (int l = 0; l < (i+1); l++ )
+                {
+                    outPut = outPut.Insert(l,characterMap[r.Next(0, 77)]);
+                }
             }
                 return outPut;
         }
