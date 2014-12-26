@@ -32,10 +32,18 @@ namespace Destination_Proxima
             Left,
             Right,
         }
-       
+       enum ButtonHover
+       {
+           none,
+           StartButton,
+           QuitButton,
+           ResumeButton,
+       }
+
         //States
         PlayerTilt playerTilt;
         GameState gameState;
+        ButtonHover buttonHover;
         KeyboardState currentState;
         KeyboardState oldState;
 
@@ -88,6 +96,8 @@ namespace Destination_Proxima
 
         //Button Hovering
         Boolean startGameHover = false;
+        Boolean quitGameHover = false;
+        
 
         //Strings
         string[] characterMap = {"a","A","b","B","c","C","d","D","e","E","f","F","g","G","h","H","i","I","j","J","k","K",
@@ -117,9 +127,9 @@ namespace Destination_Proxima
         int player1TravelV, player1TravelH;
         Rectangle player1Pos;
         Rectangle startButtonPos;
-
-
-
+        Rectangle quitButtonPos;
+        Rectangle resumeButtonPos;
+        
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -170,7 +180,9 @@ namespace Destination_Proxima
 
             //Positions
             player1Pos = new Rectangle(((graphics.PreferredBackBufferWidth / 2) - (Player1Texture.Width / 2)), graphics.PreferredBackBufferHeight - 75, 39, 49);
-            startButtonPos = new Rectangle(graphics.PreferredBackBufferWidth / 3, 310, 270, 60);
+            startButtonPos = new Rectangle(graphics.PreferredBackBufferWidth / 3, 310, (int)mainGameFont.MeasureString(startString).X, 60);
+            resumeButtonPos = new Rectangle((graphics.PreferredBackBufferWidth / 5 * 3), (graphics.PreferredBackBufferHeight / 3), (int)mainGameFont.MeasureString(resumeString).X, 60);
+            quitButtonPos = new Rectangle((graphics.PreferredBackBufferWidth / 5), (graphics.PreferredBackBufferHeight / 3), (int)mainGameFont.MeasureString(quitString).X, 60);
         }
 
 
@@ -192,11 +204,12 @@ namespace Destination_Proxima
             if (Keyboard.GetState().IsKeyDown(Keys.P) && gameState == GameState.Play)
                 player1Health--;
 
+            Point mousePoint = new Point(Mouse.GetState().X, Mouse.GetState().Y);
             switch (gameState)
             {
                 case GameState.MainMenu:
-                    IsMouseVisible = true;
-                    Point mousePoint = new Point(Mouse.GetState().X, Mouse.GetState().Y);
+                    IsMouseVisible = true; //Mouse!
+
                     if (startButtonPos.Contains(mousePoint))
                     {
                         if (currentHoverCount > hoverTime)
@@ -220,12 +233,64 @@ namespace Destination_Proxima
                     if (Mouse.GetState().LeftButton == ButtonState.Pressed)
                     {
                         if (startButtonPos.Contains(mousePoint))
+                        {
                             gameState = GameState.Play;
+                            currentHoverCount = 0;
+                            letterSplatLength = 0;
+                        }
                     }
                     break;
 
                 case GameState.PauseGame:
-                    IsMouseVisible = true;
+                    IsMouseVisible = true; //Need a Mouse?
+
+                    if (quitButtonPos.Contains(mousePoint) || resumeButtonPos.Contains(mousePoint))
+                    {
+                        if (quitButtonPos.Contains(mousePoint))
+                        {
+                            if (currentHoverCount > hoverTime)
+                            {
+                                startGameHover = true;
+                                if (letterSplatLength < quitString.Count())
+                                {
+                                    letterSplatLength++;
+                                }
+                                currentHoverCount = 0;
+                            }
+                            else
+                            {
+                                currentHoverCount++;
+                            }
+                        }
+                        else
+                        {
+                            if (currentHoverCount > hoverTime)
+                            {
+                                startGameHover = true;
+                                if (letterSplatLength < resumeString.Count())
+                                {
+                                    letterSplatLength++;
+                                }
+                                currentHoverCount = 0;
+                            }
+                            else
+                            {
+                                currentHoverCount++;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        letterSplatLength = 0;
+                    }
+
+                    if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+                    {
+                        if (quitButtonPos.Contains(mousePoint)) //Quit Current Game
+                            gameState = GameState.MainMenu;
+                        if (resumeButtonPos.Contains(mousePoint)) //Resume Game
+                            gameState = GameState.Play;
+                    }
                     if (Keyboard.GetState().IsKeyDown(Keys.Space))
                         gameState = GameState.Play;
                     break;
@@ -390,8 +455,8 @@ namespace Destination_Proxima
         
         //Menu bars and title
             spriteBatch.DrawString(mainGameFont, pausedString, new Vector2((graphics.PreferredBackBufferWidth / 3), 12), Color.White);
-            spriteBatch.DrawString(mainGameFont, quitString, new Vector2((graphics.PreferredBackBufferWidth / 5), (graphics.PreferredBackBufferHeight / 3)), Color.White);
-            spriteBatch.DrawString(mainGameFont, resumeString, new Vector2((graphics.PreferredBackBufferWidth / 5 * 3), (graphics.PreferredBackBufferHeight / 3)), Color.White);
+            spriteBatch.DrawString(mainGameFont, quitString, new Vector2(quitButtonPos.X,quitButtonPos.Y), Color.White);
+            spriteBatch.DrawString(mainGameFont, resumeString, new Vector2(resumeButtonPos.X, resumeButtonPos.Y), Color.White);
             playerHealth();
         }
 
