@@ -39,7 +39,9 @@ namespace Destination_Proxima
         KeyboardState currentState;
         KeyboardState oldState;
 
-        //Varibles
+        //Program Wide
+        int letterSplatLength = 1;
+        //GamePlay Varibles
         int player1Health = 99;
         float healthBarRotation = 0.0f;
         int currentLevel = 1;
@@ -50,7 +52,16 @@ namespace Destination_Proxima
         int maxPlayerSpeed = 5;
         int maxPlayerShotSpeed = 20;
         int PlayerShotSpeedCurrent;
+        //StartScreen
+        int starFreq = 8;
+        int starCurrentfreq;
+        int starSmallFreq = 2;
+        int starSmallCurrentfreq;
+        int starSpeedSmall = 3;
+        int starSpeed = 7;
 
+        //Random
+        Random r = new Random();
 
         //Enemy
         List<Vector2> enemyPositions;
@@ -63,6 +74,8 @@ namespace Destination_Proxima
         //Start Screen Stars
         List<Vector2> starPositions;
         List<Rectangle> starRects;
+        List<Vector2> starSmallPositions;
+        List<Rectangle> starSmallRects;
 
         //Fonts
         SpriteFont mainGameFont;
@@ -90,6 +103,7 @@ namespace Destination_Proxima
         Texture2D player1HealthMeter;
         Texture2D enemy1Texture;
         Texture2D starTexture;
+        Texture2D starSmallTexture;
         Texture2D startSplashScreen;
 
 
@@ -130,6 +144,8 @@ namespace Destination_Proxima
             //Start Star Spots
             starPositions = new List<Vector2>();
             starRects = new List<Rectangle>();
+            starSmallPositions = new List<Vector2>();
+            starSmallRects = new List<Rectangle>();
             //Missile Spots
             misslePositions = new List<Vector2>();
             missleRects = new List<Rectangle>();
@@ -149,6 +165,7 @@ namespace Destination_Proxima
             //Menues
             startSplashScreen = Content.Load<Texture2D>("Destination_Proxima");
             starTexture = Content.Load<Texture2D>("Star");
+            starSmallTexture = Content.Load<Texture2D>("starSmall");
         }
 
 
@@ -375,16 +392,73 @@ namespace Destination_Proxima
         }
         private void DrawContentStartscreen()
         {
-            generateStartStars();
-            moveStartStars();
+            //Generate Reg Stars
+            if (starCurrentfreq > starFreq){generateStartStars(); starCurrentfreq = 0;}
+            else {starCurrentfreq++;}
+            //Generate Small Stars
+            if (starSmallCurrentfreq > starSmallFreq){generateStartStarsSmall(); starSmallCurrentfreq = 0;}
+            else {starSmallCurrentfreq++;}
+
+            //Move Reg Stars
+            moveStartStars(); 
+            //Move Small Stars
+            moveStartStarsSmall(); 
+
+            //Draw Reg Stars
             for (int i = 0; i < starPositions.Count(); i++)
                 spriteBatch.Draw(starTexture, starPositions[i], Color.White);
+            //Draw Small Stars
+            for (int i = 0; i < starSmallPositions.Count(); i++)
+                spriteBatch.Draw(starSmallTexture, starSmallPositions[i], Color.White);
+            //Draw Button
+            if (startGameHover)
+            {
+                spriteBatch.DrawString(mainGameFont, splaterString(startString), new Vector2(startButtonPos.X, startButtonPos.Y), Color.White);
+            }
+            else
+            {
+                spriteBatch.DrawString(mainGameFont, startString, new Vector2(startButtonPos.X, startButtonPos.Y), Color.White);
+            }
+            //Draw Logo
             spriteBatch.Draw(startSplashScreen, new Rectangle(graphics.PreferredBackBufferWidth / 9, graphics.PreferredBackBufferHeight / 6,700,200), Color.White);
-            spriteBatch.DrawString(mainGameFont, startString, new Vector2(startButtonPos.X, startButtonPos.Y), Color.White);
+        }
+        
+        public string splaterString(string startString)
+        {
+            string outPut = startString;
+            for (int i = 0; i < letterSplatLength; i++)
+            {
+                string lastCut = outPut;
+                outPut = characterMap[r.Next(0,77)];
+            }
+                return outPut;
+        }
+        public void generateStartStarsSmall()
+        {
+            for (int i = 0; i < 1; i++)
+            {
+                int randomHight = r.Next(1, graphics.PreferredBackBufferHeight - starSmallTexture.Height);
+                starSmallPositions.Add(new Vector2(0, randomHight));
+                starSmallRects.Add(new Rectangle((int)(0), (int)randomHight, starSmallTexture.Width, starSmallTexture.Height));
+            }
+        }
+        public void moveStartStarsSmall()
+        {
+            for (int i = 0; i < starSmallPositions.Count(); i++)
+            {
+                starSmallPositions[i] += new Vector2(starSpeedSmall, 0);
+                starSmallRects[i] = new Rectangle((int)starSmallPositions[i].X, (int)starSmallPositions[i].Y, starSmallTexture.Width, starSmallTexture.Height);
+
+                if (starSmallPositions[i].X > (graphics.PreferredBackBufferWidth + 10))
+                {
+                    starSmallPositions.RemoveAt(i);
+                    starSmallRects.RemoveAt(i);
+                    i--;
+                }
+            }
         }
         public void generateStartStars()
         {
-            Random r = new Random();
             for (int i = 0; i < 1; i++)
             {
                 int randomHight = r.Next(1, graphics.PreferredBackBufferHeight - starTexture.Height);
@@ -396,10 +470,10 @@ namespace Destination_Proxima
         {
             for (int i = 0; i < starPositions.Count(); i++)
             {
-                starPositions[i] += new Vector2(4, 0);
+                starPositions[i] += new Vector2(starSpeed, 0);
                 starRects[i] = new Rectangle((int)starPositions[i].X, (int)starPositions[i].Y, starTexture.Width, starTexture.Height);
 
-                if (starPositions[i].Y < 1)
+                if (starPositions[i].X > (graphics.PreferredBackBufferWidth + 10))
                 {
                     starPositions.RemoveAt(i);
                     starRects.RemoveAt(i);
