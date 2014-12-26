@@ -139,11 +139,6 @@ namespace Destination_Proxima
 
         protected override void LoadContent()
         {
-            //Positions
-            player1Pos = new Rectangle(graphics.PreferredBackBufferWidth / 2, 500, 39, 49);
-            startButtonPos = new Rectangle(graphics.PreferredBackBufferWidth / 3, 310, 270, 60);
-
-            IsMouseVisible = true;
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
@@ -172,6 +167,10 @@ namespace Destination_Proxima
             startSplashScreen = Content.Load<Texture2D>("Destination_Proxima");
             starTexture = Content.Load<Texture2D>("Star");
             starSmallTexture = Content.Load<Texture2D>("starSmall");
+
+            //Positions
+            player1Pos = new Rectangle(((graphics.PreferredBackBufferWidth / 2) - (Player1Texture.Width / 2)), graphics.PreferredBackBufferHeight - 75, 39, 49);
+            startButtonPos = new Rectangle(graphics.PreferredBackBufferWidth / 3, 310, 270, 60);
         }
 
 
@@ -196,6 +195,7 @@ namespace Destination_Proxima
             switch (gameState)
             {
                 case GameState.MainMenu:
+                    IsMouseVisible = true;
                     Point mousePoint = new Point(Mouse.GetState().X, Mouse.GetState().Y);
                     if (startButtonPos.Contains(mousePoint))
                     {
@@ -225,11 +225,13 @@ namespace Destination_Proxima
                     break;
 
                 case GameState.PauseGame:
+                    IsMouseVisible = true;
                     if (Keyboard.GetState().IsKeyDown(Keys.Space))
                         gameState = GameState.Play;
                     break;
 
                 case GameState.Play:
+                    IsMouseVisible = false;
                      currentState = Keyboard.GetState();
                      playerTilt = PlayerTilt.None; //Rests tilt
                     //X axis movment
@@ -308,6 +310,7 @@ namespace Destination_Proxima
                     }
                     break;
                 case GameState.End:
+                    IsMouseVisible = false;
                     this.Exit();
                     break;
             }
