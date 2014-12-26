@@ -95,7 +95,6 @@ namespace Destination_Proxima
         SpriteFont mainGameFont;
 
         //Button Hovering
-        Boolean startGameHover = false;
         Boolean quitGameHover = false;
         
 
@@ -214,7 +213,7 @@ namespace Destination_Proxima
                     {
                         if (currentHoverCount > hoverTime)
                         {
-                            startGameHover = true;
+                            buttonHover = ButtonHover.StartButton;
                             if (letterSplatLength < startString.Count())
                             {
                                 letterSplatLength++;
@@ -250,7 +249,7 @@ namespace Destination_Proxima
                         {
                             if (currentHoverCount > hoverTime)
                             {
-                                startGameHover = true;
+                                buttonHover = ButtonHover.QuitButton;
                                 if (letterSplatLength < quitString.Count())
                                 {
                                     letterSplatLength++;
@@ -266,7 +265,7 @@ namespace Destination_Proxima
                         {
                             if (currentHoverCount > hoverTime)
                             {
-                                startGameHover = true;
+                                buttonHover = ButtonHover.ResumeButton;
                                 if (letterSplatLength < resumeString.Count())
                                 {
                                     letterSplatLength++;
@@ -501,7 +500,7 @@ namespace Destination_Proxima
             for (int i = 0; i < starSmallPositions.Count(); i++)
                 spriteBatch.Draw(starSmallTexture, starSmallPositions[i], Color.White);
             //Draw Button
-            if (startGameHover)
+            if (buttonHover.HasFlag(ButtonHover.StartButton))
             {
                 if (firstHover) { oldSplatterString = splaterString(startString); firstHover = false; }
                 if (currentLetterSplatSpeed > letterSplatSpeed && letterSplatLength <= startString.Count())
