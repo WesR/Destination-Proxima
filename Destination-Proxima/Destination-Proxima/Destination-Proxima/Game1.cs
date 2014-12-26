@@ -40,7 +40,13 @@ namespace Destination_Proxima
         KeyboardState oldState;
 
         //Program Wide
-        int letterSplatLength = 1;
+        int letterSplatLength = 0;
+        int hoverTime = 30;
+        int currentHoverCount;
+        string oldSplatterString;
+        Boolean firstHover = true;
+        int letterSplatSpeed = 6;
+        int currentLetterSplatSpeed;
         //GamePlay Varibles
         int player1Health = 99;
         float healthBarRotation = 0.0f;
@@ -193,8 +199,24 @@ namespace Destination_Proxima
                     Point mousePoint = new Point(Mouse.GetState().X, Mouse.GetState().Y);
                     if (startButtonPos.Contains(mousePoint))
                     {
-                        startGameHover = true;
-                    }                    
+                        if (currentHoverCount > hoverTime)
+                        {
+                            startGameHover = true;
+                            if (letterSplatLength < startString.Count())
+                            {
+                                letterSplatLength++;
+                            }
+                            currentHoverCount = 0;
+                        }
+                        else
+                        {
+                            currentHoverCount++;
+                        }
+                    }
+                    else
+                    {
+                        letterSplatLength = 0;
+                    }
                     if (Mouse.GetState().LeftButton == ButtonState.Pressed)
                     {
                         if (startButtonPos.Contains(mousePoint))
@@ -318,7 +340,7 @@ namespace Destination_Proxima
         {
             GraphicsDevice.Clear(Color.Black);
 
-            spriteBatch.Begin();                    //spriteBatch.Draw(Player1Texture, player1Pos, Color.White);
+            spriteBatch.Begin();
             switch (gameState)
             {
                 case GameState.MainMenu:
@@ -413,10 +435,22 @@ namespace Destination_Proxima
             //Draw Button
             if (startGameHover)
             {
-                spriteBatch.DrawString(mainGameFont, splaterString(startString), new Vector2(startButtonPos.X, startButtonPos.Y), Color.White);
+                if (firstHover) { oldSplatterString = splaterString(startString); firstHover = false; }
+                if (currentLetterSplatSpeed > letterSplatSpeed && letterSplatLength <= startString.Count())
+                {
+                    oldSplatterString = splaterString(startString);
+                    currentLetterSplatSpeed = 0;
+                }
+                else
+                {
+                    currentLetterSplatSpeed++;
+                }
+                
+                spriteBatch.DrawString(mainGameFont, oldSplatterString, new Vector2(startButtonPos.X, startButtonPos.Y), Color.White);
             }
             else
             {
+                firstHover = true;
                 spriteBatch.DrawString(mainGameFont, startString, new Vector2(startButtonPos.X, startButtonPos.Y), Color.White);
             }
             //Draw Logo
