@@ -101,8 +101,7 @@ namespace Destination_Proxima
         //Strings
         string[] characterMap = {"a","A","b","B","c","C","d","D","e","E","f","F","g","G","h","H","i","I","j","J","k","K",
                                        "l","L","m","M","n","N","o","O","p","P","q","Q","r","R","s","S","t","T","u","U","v",
-                                       "V","w","W","x","X","y","Y","z","Z",";",":","'","[","]","{","}",",","/",".","+","=",
-                                       "!","@","#","$","%","^","&","*","(",")","~","-","_","`"};
+                                       "V","w","W","x","X","y","Y","z","Z"};
         string startString = "Start Game";
         string pausedString = "Game Paused";
         string resumeString = "Resume";
@@ -532,7 +531,7 @@ namespace Destination_Proxima
                 outPut = outPut.Substring((i+1));
                 for (int l = 0; l < (i+1); l++ )
                 {
-                    outPut = outPut.Insert(l,characterMap[r.Next(0, 77)]);
+                    outPut = outPut.Insert(l,characterMap[r.Next(0, 52)]);
                 }
             }
                 return outPut;
