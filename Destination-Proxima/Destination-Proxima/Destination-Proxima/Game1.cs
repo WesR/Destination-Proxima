@@ -52,6 +52,7 @@ namespace Destination_Proxima
         ButtonHover buttonHover;
         KeyboardState currentState;
         KeyboardState oldState;
+        EnemyMovement enemyMovementState;
 
         //Songs
         Song mainThemeSong;
@@ -399,7 +400,7 @@ namespace Destination_Proxima
                              int newEnemyXPos = r.Next(20, graphics.PreferredBackBufferWidth - 20);
                              enemyPositions.Add(new Vector2(newEnemyXPos, 35));
                              enemyRects.Add(new Rectangle((newEnemyXPos), 35, enemy1Texture.Width, enemy1Texture.Height));
-                             enemyMovement.Add(EnemyMovement.Left);
+                             enemyMovement.Add(new enemyMovementState(EnemyMovement.Left));
                          }
                      }
 
@@ -538,6 +539,10 @@ namespace Destination_Proxima
             //Player1 shots
             for (int i = 0; i < misslePositions.Count(); i++)
                 spriteBatch.Draw(player1Shot, misslePositions[i], Color.White);
+            playerHealth();
+            //Enemy
+            for (int i = 0; i < enemyPositions.Count(); i++)
+                spriteBatch.Draw(enemy1Texture, enemyPositions[i], Color.White);
             playerHealth();
         }
         private void DrawContentStartscreen()
