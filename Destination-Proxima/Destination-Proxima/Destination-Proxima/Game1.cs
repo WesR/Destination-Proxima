@@ -52,7 +52,6 @@ namespace Destination_Proxima
         ButtonHover buttonHover;
         KeyboardState currentState;
         KeyboardState oldState;
-        EnemyMovement[] enemyMovement;
 
         //Songs
         Song mainThemeSong;
@@ -93,6 +92,7 @@ namespace Destination_Proxima
         //Enemy
         List<Vector2> enemyPositions;
         List<Rectangle> enemyRects;
+        List<EnemyMovement> enemyMovement;
 
         //Missiles
         List<Vector2> misslePositions;
@@ -399,17 +399,38 @@ namespace Destination_Proxima
                              int newEnemyXPos = r.Next(20, graphics.PreferredBackBufferWidth - 20);
                              enemyPositions.Add(new Vector2(newEnemyXPos, 35));
                              enemyRects.Add(new Rectangle((newEnemyXPos), 35, enemy1Texture.Width, enemy1Texture.Height));
+                             enemyMovement.Add(EnemyMovement.Left);
                          }
                      }
 
                      //Move enemys
                      for (int i = 0; i < enemyPositions.Count(); i++)
                      {
-                         if (enemyPositions[i].X > graphics.PreferredBackBufferWidth - 20)
+                         if (enemyPositions[i].X > graphics.PreferredBackBufferWidth - 20 || enemyPositions[i].X < 20 && enemyMovement[i] == EnemyMovement.Right)
                          {
-                             enemyPositions[i] -= new Vector2(0,8);
+                             enemyPositions[i] += new Vector2(0,5);
+                             enemyMovement[i] = EnemyMovement.Down;
                          }
-                         enemyPositions[i] -= new Vector2(5, 0);
+                         else if (enemyPositions[i].X > graphics.PreferredBackBufferWidth - 20 || enemyPositions[i].X < 20 && enemyMovement[i] == EnemyMovement.Down)
+                         {
+                             enemyPositions[i] += new Vector2(0, 5);
+                             if (enemyPositions[i].X < 20)
+                             {
+                                 enemyMovement[i] = EnemyMovement.Right;
+                             }
+                             else
+                             {
+                                 enemyMovement[i] = EnemyMovement.Left;
+                             }
+                         }
+                         if (enemyMovement[i] == EnemyMovement.Left)
+                         {
+                             enemyPositions[i] -= new Vector2(5, 0);
+                         }
+                         else
+                         {
+                             enemyPositions[i] += new Vector2(5, 0);
+                         }
                          enemyRects[i] = new Rectangle((int)enemyPositions[i].X, (int)enemyPositions[i].Y, enemy1Texture.Width, enemy1Texture.Height);
                      }
                     break;
