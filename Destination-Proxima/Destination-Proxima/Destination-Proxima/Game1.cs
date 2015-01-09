@@ -24,20 +24,26 @@ namespace Destination_Proxima
             LevelDisplay,
             PauseGame,
             Play,
-            End,
+            End
         }
         enum PlayerTilt
         {
             None,
             Left,
-            Right,
+            Right
         }
        enum ButtonHover
        {
            none,
            StartButton,
            QuitButton,
-           ResumeButton,
+           ResumeButton
+       }
+       enum EnemyMovement
+       {
+          Left,
+          Right,
+          Down
        }
 
         //States
@@ -46,6 +52,7 @@ namespace Destination_Proxima
         ButtonHover buttonHover;
         KeyboardState currentState;
         KeyboardState oldState;
+        EnemyMovement[] enemyMovement;
 
         //Songs
         Song mainThemeSong;
@@ -383,6 +390,7 @@ namespace Destination_Proxima
                              i--;
                          }
                     }
+
                     //Generate enemys
                      if (generateEnemy)
                      {
@@ -392,6 +400,17 @@ namespace Destination_Proxima
                              enemyPositions.Add(new Vector2(newEnemyXPos, 35));
                              enemyRects.Add(new Rectangle((newEnemyXPos), 35, enemy1Texture.Width, enemy1Texture.Height));
                          }
+                     }
+
+                     //Move enemys
+                     for (int i = 0; i < enemyPositions.Count(); i++)
+                     {
+                         if (enemyPositions[i].X > graphics.PreferredBackBufferWidth - 20)
+                         {
+                             enemyPositions[i] -= new Vector2(0,8);
+                         }
+                         enemyPositions[i] -= new Vector2(5, 0);
+                         enemyRects[i] = new Rectangle((int)enemyPositions[i].X, (int)enemyPositions[i].Y, enemy1Texture.Width, enemy1Texture.Height);
                      }
                     break;
                 case GameState.End:
