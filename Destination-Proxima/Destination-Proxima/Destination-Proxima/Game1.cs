@@ -47,6 +47,9 @@ namespace Destination_Proxima
         KeyboardState currentState;
         KeyboardState oldState;
 
+        //Songs
+        Song mainThemeSong;
+
         //Program Wide
         int letterSplatLength = 0;
         int hoverTime = 30;
@@ -55,6 +58,7 @@ namespace Destination_Proxima
         Boolean firstHover = true;
         int letterSplatSpeed = 6;
         int currentLetterSplatSpeed;
+
         //GamePlay Varibles
         int player1Health = 99;
         float healthBarRotation = 0.0f;
@@ -66,6 +70,7 @@ namespace Destination_Proxima
         int maxPlayerSpeed = 5;
         int maxPlayerShotSpeed = 20;
         int PlayerShotSpeedCurrent;
+
         //StartScreen
         int starFreq = 8;
         int starCurrentfreq;
@@ -150,6 +155,8 @@ namespace Destination_Proxima
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            //Songs
+            mainThemeSong = Content.Load<Song>("bonus_black Pearls");
             //Start Star Spots
             starPositions = new List<Vector2>();
             starRects = new List<Rectangle>();
@@ -192,6 +199,10 @@ namespace Destination_Proxima
 
         protected override void Update(GameTime gameTime)
         {
+            //Loops game music
+            if (MediaPlayer.State == MediaState.Paused || MediaPlayer.State == MediaState.Stopped)
+                MediaPlayer.Play(mainThemeSong);
+
             //Exit Game
             if (Keyboard.GetState().IsKeyDown(Keys.Escape) && gameState == GameState.MainMenu)
                 this.Exit();
