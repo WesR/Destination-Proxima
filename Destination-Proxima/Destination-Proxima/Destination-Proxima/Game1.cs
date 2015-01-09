@@ -62,6 +62,7 @@ namespace Destination_Proxima
         //GamePlay Varibles
         int player1Health = 99;
         float healthBarRotation = 0.0f;
+        Boolean generateEnemy = true;
         int currentLevel = 1;
         int playerSpeed = 2;
         int player1DriftRate = 10;
@@ -382,6 +383,16 @@ namespace Destination_Proxima
                              i--;
                          }
                     }
+                    //Generate enemys
+                     if (generateEnemy)
+                     {
+                         for (int i = 0; i < currentLevel; i++)
+                         {
+                             int newEnemyXPos = r.Next(20, graphics.PreferredBackBufferWidth - 20);
+                             enemyPositions.Add(new Vector2(newEnemyXPos, 35));
+                             enemyRects.Add(new Rectangle((newEnemyXPos), 35, enemy1Texture.Width, enemy1Texture.Height));
+                         }
+                     }
                     break;
                 case GameState.End:
                     IsMouseVisible = false;
