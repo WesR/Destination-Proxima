@@ -223,6 +223,9 @@ namespace Destination_Proxima
             if (Keyboard.GetState().IsKeyDown(Keys.P) && gameState == GameState.Play)
                 player1Health--;
 
+            if (Keyboard.GetState().IsKeyDown(Keys.T) && gameState == GameState.Play)
+                gameState = GameState.End;
+
             Point mousePoint = new Point(Mouse.GetState().X, Mouse.GetState().Y);
             switch (gameState)
             {
@@ -441,13 +444,33 @@ namespace Destination_Proxima
                          }
                          enemyRects[i] = new Rectangle((int)enemyPositions[i].X, (int)enemyPositions[i].Y, enemy1Texture.Width, enemy1Texture.Height);
                      }
+                     //Checks for collision
+                     for (int i = 0; i < misslePositions.Count(); i++)
+                     {
+                         try
+                         {
+                             Rectangle badRect = enemyRects[0];
+                             if (badRect.Intersects(missleRects[i]))
+                             {
+                                 enemyPositions.RemoveAt(0);
+                                 enemyRects.RemoveAt(0);
+                                 gameState = GameState.End;
+                             }
+                         }
+                         catch
+                         {
+                             gameState = GameState.End;
+                         }
+                        
+                     }
                     break;
                 case GameState.End:
                     IsMouseVisible = false;
-                    this.Exit();
+                    if (Keyboard.GetState().IsKeyDown(Keys.Space))
+                        gameState = GameState.MainMenu;
                     break;
             }
-            healthCheck();
+            healthCheck();            
             oldState = currentState;
             base.Update(gameTime);
         }
@@ -489,10 +512,16 @@ namespace Destination_Proxima
                     DrawGamePlay();
                     break;
                 case GameState.End:
+                    DrawGameEnd();
                     break;
             }
             spriteBatch.End();
             base.Draw(gameTime);
+        }
+
+        private void DrawGameEnd()
+        {
+            spriteBatch.DrawString(mainGameFont, gameOverString, new Vector2((graphics.PreferredBackBufferWidth / 3), 12), Color.White);
         }
 
         private void playerHealth()
