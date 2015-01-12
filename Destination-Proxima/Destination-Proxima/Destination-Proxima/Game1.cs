@@ -467,7 +467,7 @@ namespace Destination_Proxima
                 case GameState.End:
                     IsMouseVisible = false;
                     if (Keyboard.GetState().IsKeyDown(Keys.Space))
-                        gameState = GameState.MainMenu;
+                        this.Exit();
                     break;
             }
             healthCheck();            
