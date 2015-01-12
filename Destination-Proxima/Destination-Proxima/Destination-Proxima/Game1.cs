@@ -177,6 +177,7 @@ namespace Destination_Proxima
             //Enemy Spots
             enemyPositions = new List<Vector2>();
             enemyRects = new List<Rectangle>();
+            enemyMovement = new List<EnemyMovement>();
             //Fonts
             mainGameFont = Content.Load<SpriteFont>("StartButton");
             //Player 1
@@ -400,22 +401,28 @@ namespace Destination_Proxima
                              int newEnemyXPos = r.Next(20, graphics.PreferredBackBufferWidth - 20);
                              enemyPositions.Add(new Vector2(newEnemyXPos, 35));
                              enemyRects.Add(new Rectangle((newEnemyXPos), 35, enemy1Texture.Width, enemy1Texture.Height));
-                             enemyMovement.Add(new enemyMovementState(EnemyMovement.Left));
+                             enemyMovement.Add(EnemyMovement.Left);
                          }
+                         generateEnemy = false;
                      }
 
                      //Move enemys
                      for (int i = 0; i < enemyPositions.Count(); i++)
                      {
-                         if (enemyPositions[i].X > graphics.PreferredBackBufferWidth - 20 || enemyPositions[i].X < 20 && enemyMovement[i] == EnemyMovement.Right)
+                         if (enemyPositions[i].X > graphics.PreferredBackBufferWidth - 20  && enemyMovement[i] == EnemyMovement.Right)
                          {
                              enemyPositions[i] += new Vector2(0,5);
                              enemyMovement[i] = EnemyMovement.Down;
                          }
-                         else if (enemyPositions[i].X > graphics.PreferredBackBufferWidth - 20 || enemyPositions[i].X < 20 && enemyMovement[i] == EnemyMovement.Down)
+                         else if (enemyPositions[i].X < 20  && enemyMovement[i] == EnemyMovement.Left)
+                         {
+                             enemyPositions[i] += new Vector2(0,5);
+                             enemyMovement[i] = EnemyMovement.Down;
+                         }
+                         else if (enemyMovement[i] == EnemyMovement.Down)
                          {
                              enemyPositions[i] += new Vector2(0, 5);
-                             if (enemyPositions[i].X < 20)
+                             if (enemyPositions[i].X <= 20)
                              {
                                  enemyMovement[i] = EnemyMovement.Right;
                              }
@@ -428,7 +435,7 @@ namespace Destination_Proxima
                          {
                              enemyPositions[i] -= new Vector2(5, 0);
                          }
-                         else
+                         else if (enemyMovement[i] == EnemyMovement.Right)
                          {
                              enemyPositions[i] += new Vector2(5, 0);
                          }
